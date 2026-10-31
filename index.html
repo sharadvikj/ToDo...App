@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Registration System</title>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Student Registration System</h2>
+
+    <form id="studentForm">
+
+        <label>Student Name</label>
+        <input type="text" id="name"
+               placeholder="Enter full name" required>
+
+        <label>Email Address</label>
+        <input type="email" id="email"
+               placeholder="Enter email address" required>
+
+        <label>Phone Number</label>
+        <input type="tel" id="phone"
+               placeholder="Enter 10 digit phone number"
+               pattern="[0-9]{10}" required>
+
+        <label>Date of Birth</label>
+        <input type="date" id="dob" required>
+
+        <label>Gender</label>
+        <div class="options">
+            <input type="radio" name="gender" value="Male" required> Male
+            <input type="radio" name="gender" value="Female"> Female
+            <input type="radio" name="gender" value="Other"> Other
+        </div>
+
+        <label>Select Courses</label>
+        <div class="options">
+            <input type="checkbox" name="course" value="HTML"> HTML
+            <input type="checkbox" name="course" value="CSS"> CSS
+            <br>
+            <input type="checkbox" name="course" value="JavaScript"> JavaScript
+            <input type="checkbox" name="course" value="Python"> Python
+        </div>
+
+        <label>Department</label>
+        <select id="department" required>
+            <option value="">Choose Department</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Civil">Civil</option>
+        </select>
+
+        <button type="submit">Submit Registration</button>
+
+    </form>
+
+    <div id="result">
+        <h3>Registration Successful!</h3>
+        <div id="studentDetails"></div>
+    </div>
+
+</div>
+
+
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to right, #dbeafe, #e0e7ff);
+        padding: 30px;
+    }
+
+    .container {
+        max-width: 500px;
+        margin: auto;
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+        text-align: center;
+        color: #3730a3;
+        margin-bottom: 25px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    select {
+        width: 100%;
+        padding: 11px;
+        margin: 8px 0 18px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+        margin: 10px 5px;
+    }
+
+    .options {
+        margin: 8px 0 20px;
+        line-height: 1.8;
+    }
+
+    button {
+        width: 100%;
+        padding: 13px;
+        background-color: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 7px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #3730a3;
+    }
+
+    #result {
+        display: none;
+        margin-top: 25px;
+        padding: 20px;
+        background-color: #ecfdf5;
+        border-left: 5px solid #10b981;
+        border-radius: 8px;
+    }
+
+    #result h3 {
+        color: #047857;
+    }
+
+    #studentDetails p {
+        line-height: 1.6;
+    }
+
+</style>
+
+
+<script>
+
+    document.getElementById("studentForm").addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        let name = document.getElementById("name").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let phone = document.getElementById("phone").value;
+        let dob = document.getElementById("dob").value;
+        let department = document.getElementById("department").value;
+
+        let gender = document.querySelector('input[name="gender"]:checked');
+
+        let courses = document.querySelectorAll('input[name="course"]:checked');
+
+        if (name === "" || email === "" || phone === "" ||
+            dob === "" || !gender || department === "") {
+
+            alert("Please fill all required fields!");
+            return;
+        }
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+            alert("Enter a valid 10-digit phone number!");
+            return;
+        }
+
+        if (new Date(dob) > new Date()) {
+            alert("Date of birth cannot be in the future!");
+            return;
+        }
+
+        if (courses.length === 0) {
+            alert("Please select at least one course!");
+            return;
+        }
+
+        let selectedCourses = [];
+
+        courses.forEach(function(course) {
+            selectedCourses.push(course.value);
+        });
+
+        document.getElementById("studentDetails").innerHTML = `
+            <p><b>Name:</b> ${escapeHTML(name)}</p>
+            <p><b>Email:</b> ${escapeHTML(email)}</p>
+            <p><b>Phone Number:</b> ${escapeHTML(phone)}</p>
+            <p><b>Date of Birth:</b> ${escapeHTML(dob)}</p>
+            <p><b>Gender:</b> ${escapeHTML(gender.value)}</p>
+            <p><b>Courses:</b> ${selectedCourses.map(escapeHTML).join(", ")}</p>
+            <p><b>Department:</b> ${escapeHTML(department)}</p>
+        `;
+
+        document.getElementById("result").style.display = "block";
+
+    });
+
+    function escapeHTML(value) {
+        return String(value).replace(/[&<>"']/g, function(char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[char];
+        });
+    }
+
+</script>
+
+</body>
+</html>
